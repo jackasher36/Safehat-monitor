@@ -1,0 +1,6 @@
+train: ../data/train/images
+val: ../data/valid/images
+test: ../data/test/images
+
+nc: 10
+names: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']

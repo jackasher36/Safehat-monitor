@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全帽检测</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        label {
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #b5b5b5;
+            cursor: not-allowed;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #333;
+        }
+
+        .loading {
+            font-size: 18px;
+            color: #007bff;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            button {
+                width: 100%;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>安全帽检测</h1>
+</header>
+
+<div class="container">
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="file">选择图片：</label>
+        <input type="file" id="file" name="file" accept="image/*,video/*" required>
+        <button type="button" onclick="uploadFile()">上传并检测</button>
+    </form>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    function uploadFile() {
+        const formData = new FormData(document.getElementById("uploadForm"));
+        const button = document.querySelector("button");
+        const resultDiv = document.getElementById("result");
+
+        // 禁用按钮并显示加载中提示
+        button.disabled = true;
+        resultDiv.innerHTML = '<div class="loading">检测中，请稍候...</div>';
+
+        fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(result => {
+            resultDiv.innerText = "检测结果:\n" + result;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            resultDiv.innerText = "检测失败！";
+        })
+        .finally(() => {
+            // 检测完成，重新启用按钮
+            button.disabled = false;
+        });
+    }
+</script>
+
+</body>
+</html>
